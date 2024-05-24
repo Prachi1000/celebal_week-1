@@ -1,41 +1,40 @@
 import React from "react";
 import { Formik, Form, Field,ErrorMessage } from "formik";
 // import { Link } from 'react-router-dom';
+// import Infor from './Infor';
 import * as Yup from "yup";
+import { useNavigate } from 'react-router-dom';
 
 const SignupSchema = Yup.object().shape({
-  FirstName: Yup.string()
-    .min(2, 'Too Short!')
-    .max(70, 'Too Long!')
-    .required('Required'),
-    LastName: Yup.string()
-    .min(2, 'Too Short!')
-    .max(70, 'Too Long!')
-    .required('Required'),
-    PhoneNo: Yup.string()
-    .required('Required'),
-  email: Yup.string()
-    .email('Invalid email')
-    .required('Required'),
-    Password: Yup.string()
-    .min(8, 'Too short!')
-    .required('Required'),
-    PanNo: Yup.string()
-    .required('Required'),
-    AdharNo: Yup.string()
-    .required('Required'),
+  FirstName: Yup.string().min(4).max(15).required('Name Field Is Empty'),
+  LastName: Yup.string().min(4).max(15).required('Name Field Is Empty'),
+  Username:Yup.string().min(4, 'Enter Mininmum 4 Letters').max(15).required('Name Field Is Empty'),
+  email: Yup.string().email().required('Email Field Is Empty'),
+  password: Yup.string().min(8, 'Enter Mininmum 8 Letters').max(15).matches(/[a-z]/, 'Password Must Contain At Least One Lowercase Letter')
+      .matches(/[A-Z]/, 'Password Must Contain At Least One Uppercase Letter')
+      .matches(/[0-9]/, 'Password must contain at least one number')
+      .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Password must contain at least one special character').required('Password Field Is Empty'),
+  PhoneNo: Yup.string().matches(/[0-9]/ ,'select one').required('Phone Number Field Is Empty'),   
+  Country: Yup.string().required('select one'),    
+  City: Yup.string().required('select one'),
+  PanNo: Yup.string().matches(/[0-9]/ ,'select one').required('Pan Number Field Is Empty'),
+  AdharNo: Yup.string().matches(/[0-9]/ ,'select one').required('Aadhar Number Field Is Empty'),
 });
 
-export let info = {};
-// const Info = ()=>{
-//   return(
-//     <div>
-//       <h1>{info12.name}</h1>
-//     </div>
-//   )
-// }
+
+const info=[];
 const App = () => {
+
+  const MyForm = () => {
+  let navigate = useNavigate();}
+
+  const onSubmit = (values) => {
+    console.log('Form data', values);
+    navigate('/another-page', { state: values });
+  };
+
   return (
+
     <div className="form-container">
       <Formik
         initialValues={{
@@ -44,7 +43,6 @@ const App = () => {
           Username: "",
           email:"",
           password: "",
-          gender: "",
           PhoneNo: "",
           Country: "",
           City:"",
@@ -53,9 +51,7 @@ const App = () => {
 
         }}
         validationSchema={SignupSchema}
-        onSubmit={(values) => {
-          info = values;
-        }}
+        onSubmit={onSubmit}
       >
         {({ values,errors }) => (
           <Form>
@@ -69,14 +65,14 @@ const App = () => {
             <label>Username : </label>
             <Field name="Username" type="text" />
             <ErrorMessage name="Username" />
-            <br /> <br />
-            <label>Password : </label>
-            <Field name="password" type="password" />
-            <ErrorMessage name="Password" />
-            <br /> <br />
+            <br /> <br />           
             <label>email : </label>
             <Field name="email" type="email" />
             <ErrorMessage name="email" />
+            <br /> <br />
+            <label>Password : </label>
+            <Field name="password" type="password" />
+            <ErrorMessage name="password" />
             <br /> <br />
             <label>PhoneNo : </label>
             <Field name="PhoneNo" type="number" />
@@ -88,6 +84,7 @@ const App = () => {
               <option value="America">America</option>
               <option value="Korea">Korea</option>
             </Field>
+            <ErrorMessage name="Country" />
             <br /> <br />
             <label>City : </label>
             <Field name="City" as="select">
@@ -95,10 +92,12 @@ const App = () => {
               <option value="hyd">Hydrabad</option>
               <option value="delhi">Delhi</option>
             </Field>
+            <ErrorMessage name="City" />
             <br /> <br />
             <label>PanNo : </label>
             <Field name="PanNo" type="number" />
             <ErrorMessage name="PanNo" />
+    
             <br /> <br />
             <label>AdharNo : </label>
             <Field name="AdharNo" type="number" />
@@ -117,7 +116,7 @@ const App = () => {
             <br /> <br /> */}
            
                 {/* <Link to="/info">       */}
-                      <button className="button" type="submit">Submit</button>
+                      <button onClick={handleClick} className="button" type="submit">Submit</button>
                {/* </Link>  */}
           </Form>
         )}
